@@ -30,4 +30,5 @@ bitwarden = { version = "2.0", features = ["secrets"] }
 # Patch h2 to accept malformed :authority headers from gRPC over Unix sockets.
 # The Kubernetes CSI driver's Go gRPC client sets :authority to the raw socket
 # path which contains '/' characters invalid per RFC 3986.
-h2 = { path = "h2-patched" }
+# See: https://github.com/hyperium/h2/pull/487 (open since 2020, unmerged)
+h2 = { git = "https://github.com/kvncrw/h2.git", branch = "master" }

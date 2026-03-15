@@ -1276,6 +1276,7 @@ dependencies = [
 [[package]]
 name = "h2"
 version = "0.4.13"
+source = "git+https://github.com/kvncrw/h2.git?branch=master#d6ae2ecaf41e0aea97b46f33a5fc3b37b565a659"
 dependencies = [
  "atomic-waker",
  "bytes",
