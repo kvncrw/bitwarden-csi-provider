@@ -25,3 +25,9 @@ uuid = { version = "1", features = ["v4", "serde"] }
 clap = { version = "4", features = ["derive"] }
 async-trait = "0.1"
 bitwarden = { version = "2.0", features = ["secrets"] }
+
+[patch.crates-io]
+# Patch h2 to accept malformed :authority headers from gRPC over Unix sockets.
+# The Kubernetes CSI driver's Go gRPC client sets :authority to the raw socket
+# path which contains '/' characters invalid per RFC 3986.
+h2 = { path = "h2-patched" }
