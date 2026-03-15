@@ -10,7 +10,7 @@ COPY proto proto
 
 RUN cargo build --release --bin bws-csi-provider
 
-FROM gcr.io/distroless/cc-debian12:nonroot
+FROM gcr.io/distroless/cc-debian12
 
 COPY --from=builder /build/target/release/bws-csi-provider /usr/local/bin/bws-csi-provider
 
