@@ -1,0 +1,28 @@
+[package]
+name = "bws-csi-provider"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "bws-csi-provider"
+path = "src/main.rs"
+
+[dependencies]
+bws-csi-proto = { path = "../bws-csi-proto" }
+bws-csi-core = { path = "../bws-csi-core" }
+async-trait.workspace = true
+clap.workspace = true
+prost.workspace = true
+tokio.workspace = true
+tonic.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+uuid.workspace = true
+tokio-stream = { version = "0.1", features = ["net"] }
+
+[dev-dependencies]
+tempfile = "3"
+serde_json = "1"
+tower = "0.4"
+hyper-util = "0.1"

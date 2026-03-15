@@ -1,0 +1,27 @@
+[workspace]
+members = [
+    "crates/bws-csi-proto",
+    "crates/bws-csi-core",
+    "crates/bws-csi-provider",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-only"
+repository = "https://github.com/kvncrw/bws-csi-provider"
+
+[workspace.dependencies]
+tokio = { version = "1", features = ["full"] }
+tonic = "0.12"
+prost = "0.13"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
+thiserror = "2"
+serde = { version = "1", features = ["derive"] }
+serde_yaml = "0.9"
+uuid = { version = "1", features = ["v4", "serde"] }
+clap = { version = "4", features = ["derive"] }
+async-trait = "0.1"
+bitwarden = { version = "2.0", features = ["secrets"] }

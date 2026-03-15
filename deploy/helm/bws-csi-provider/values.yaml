@@ -1,0 +1,24 @@
+image:
+  repository: ghcr.io/kvncrw/bws-csi-provider
+  tag: latest
+  pullPolicy: IfNotPresent
+
+providerDir: /etc/kubernetes/secrets-store-csi-providers
+socketName: bitwarden.sock
+healthPort: 8080
+logFormat: json
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi
+
+serviceAccount:
+  create: true
+  name: bws-csi-provider
+
+nodeSelector: {}
+tolerations: []
