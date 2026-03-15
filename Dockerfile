@@ -7,6 +7,7 @@ COPY Cargo.toml Cargo.lock ./
 COPY .cargo .cargo
 COPY crates crates
 COPY proto proto
+COPY h2-patched h2-patched
 
 RUN cargo build --release --bin bws-csi-provider
 
