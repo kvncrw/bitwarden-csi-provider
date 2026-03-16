@@ -99,10 +99,12 @@ impl BitwardenClient for SdkBitwardenClient {
     }
 
     async fn get_secret(&self, id: Uuid) -> Result<SecretData, ProviderError> {
-        let guard = self.client.lock().await;
-        let client = guard
-            .as_ref()
-            .ok_or_else(|| ProviderError::AuthFailed("not authenticated".into()))?;
+        let client = {
+            let guard = self.client.lock().await;
+            guard
+                .clone()
+                .ok_or_else(|| ProviderError::AuthFailed("not authenticated".into()))?
+        };
 
         let req = SecretGetRequest { id };
         let response = client
@@ -122,10 +124,12 @@ impl BitwardenClient for SdkBitwardenClient {
         &self,
         project_id: Uuid,
     ) -> Result<Vec<SecretData>, ProviderError> {
-        let guard = self.client.lock().await;
-        let client = guard
-            .as_ref()
-            .ok_or_else(|| ProviderError::AuthFailed("not authenticated".into()))?;
+        let client = {
+            let guard = self.client.lock().await;
+            guard
+                .clone()
+                .ok_or_else(|| ProviderError::AuthFailed("not authenticated".into()))?
+        };
 
         // First get the secret identifiers for the project
         let list_req = SecretIdentifiersByProjectRequest { project_id };

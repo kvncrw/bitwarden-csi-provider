@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use tracing::{info, warn};
-use uuid::Uuid;
 
 use crate::bitwarden::BitwardenClient;
 use crate::error::ProviderError;
@@ -37,7 +36,7 @@ pub async fn handle_mount(
 }
 
 fn extract_access_token(secrets_json: &str) -> Result<String, ProviderError> {
-    let map: HashMap<String, String> = serde_yaml::from_str(secrets_json)
+    let map: HashMap<String, String> = serde_json::from_str(secrets_json)
         .map_err(|e| ProviderError::InvalidParams(format!("failed to parse secrets: {e}")))?;
 
     map.get("access_token")
@@ -51,7 +50,7 @@ fn extract_access_token(secrets_json: &str) -> Result<String, ProviderError> {
 }
 
 fn extract_objects_param(attributes_json: &str) -> Result<String, ProviderError> {
-    let map: HashMap<String, String> = serde_yaml::from_str(attributes_json).map_err(|e| {
+    let map: HashMap<String, String> = serde_json::from_str(attributes_json).map_err(|e| {
         ProviderError::InvalidParams(format!("failed to parse attributes: {e}"))
     })?;
 
@@ -115,12 +114,6 @@ fn sanitize_key(key: &str) -> String {
         .collect()
 }
 
-/// Parse a secret UUID from a string, with a clear error message.
-pub fn parse_uuid(s: &str) -> Result<Uuid, ProviderError> {
-    Uuid::parse_str(s)
-        .map_err(|e| ProviderError::InvalidParams(format!("invalid UUID '{s}': {e}")))
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -172,15 +165,4 @@ mod tests {
         assert_eq!(sanitize_key("API_KEY"), "API_KEY");
     }
 
-    #[test]
-    fn parse_uuid_valid() {
-        let uuid = parse_uuid("d1b2c3a4-e5f6-7890-abcd-ef1234567890").unwrap();
-        assert_eq!(uuid.to_string(), "d1b2c3a4-e5f6-7890-abcd-ef1234567890");
-    }
-
-    #[test]
-    fn parse_uuid_invalid() {
-        let err = parse_uuid("not-a-uuid").unwrap_err();
-        assert!(err.to_string().contains("invalid UUID"));
-    }
 }

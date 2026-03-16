@@ -24,6 +24,9 @@ spec:
         - name: provider
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
           args:
             - --provider-dir={{ .Values.providerDir }}
             - --socket-name={{ .Values.socketName }}

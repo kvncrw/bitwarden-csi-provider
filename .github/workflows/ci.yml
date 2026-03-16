@@ -52,11 +52,10 @@ jobs:
         run: cargo install cargo-tarpaulin
 
       - name: Coverage
-        run: cargo tarpaulin --workspace --engine llvm --out xml --skip-clean
-
-      - name: Check coverage gate (90%)
         run: |
-          COVERAGE=$(cargo tarpaulin --workspace --engine llvm --skip-clean 2>&1 | grep -oP '[\d.]+% coverage' | grep -oP '[\d.]+')
+          OUTPUT=$(cargo tarpaulin --workspace --engine llvm --out xml --skip-clean 2>&1)
+          echo "$OUTPUT"
+          COVERAGE=$(echo "$OUTPUT" | grep -oP '[\d.]+% coverage' | grep -oP '[\d.]+')
           echo "Coverage: ${COVERAGE}%"
           if (( $(echo "$COVERAGE < 90" | bc -l) )); then
             echo "::error::Coverage ${COVERAGE}% is below 90% gate"
