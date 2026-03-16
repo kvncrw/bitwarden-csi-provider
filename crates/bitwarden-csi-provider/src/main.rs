@@ -4,7 +4,7 @@ mod server;
 
 use std::fs;
 
-use bws_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProviderServer;
+use bitwarden_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProviderServer;
 use clap::Parser;
 use tokio::net::UnixListener;
 use tokio::signal;
@@ -48,7 +48,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!(
         socket = %socket_path.display(),
         version = env!("CARGO_PKG_VERSION"),
-        "bws-csi-provider starting"
+        "bitwarden-csi-provider starting"
     );
 
     // Spawn health probe server

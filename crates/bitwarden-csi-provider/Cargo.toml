@@ -1,16 +1,16 @@
 [package]
-name = "bws-csi-provider"
+name = "bitwarden-csi-provider"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 
 [[bin]]
-name = "bws-csi-provider"
+name = "bitwarden-csi-provider"
 path = "src/main.rs"
 
 [dependencies]
-bws-csi-proto = { path = "../bws-csi-proto" }
-bws-csi-core = { path = "../bws-csi-core" }
+bitwarden-csi-proto = { path = "../bitwarden-csi-proto" }
+bitwarden-csi-core = { path = "../bitwarden-csi-core" }
 async-trait.workspace = true
 clap.workspace = true
 prost.workspace = true

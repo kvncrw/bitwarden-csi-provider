@@ -1,4 +1,4 @@
-# bws-csi-provider
+# bitwarden-csi-provider
 
 Bitwarden Secrets Manager provider for the [Kubernetes Secrets Store CSI Driver](https://secrets-store-csi-driver.sigs.k8s.io/).
 
@@ -21,7 +21,7 @@ helm install csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver
 ### 2. Deploy the provider
 
 ```bash
-helm install bws-csi-provider deploy/helm/bws-csi-provider/ \
+helm install bitwarden-csi-provider deploy/helm/bitwarden-csi-provider/ \
   --namespace kube-system
 ```
 
@@ -73,7 +73,7 @@ containers:
 
 ```bash
 cargo build --release
-docker build -t ghcr.io/kvncrw/bws-csi-provider:latest .
+docker build -t ghcr.io/kvncrw/bitwarden-csi-provider:latest .
 ```
 
 ## Testing

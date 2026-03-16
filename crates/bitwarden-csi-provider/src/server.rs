@@ -1,7 +1,7 @@
-use bws_csi_core::bitwarden::SdkBitwardenClient;
-use bws_csi_core::provider::handle_mount;
-use bws_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProvider;
-use bws_csi_proto::v1alpha1::{
+use bitwarden_csi_core::bitwarden::SdkBitwardenClient;
+use bitwarden_csi_core::provider::handle_mount;
+use bitwarden_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProvider;
+use bitwarden_csi_proto::v1alpha1::{
     File, MountRequest, MountResponse, VersionRequest, VersionResponse,
 };
 use tonic::{Request, Response, Status};
@@ -36,7 +36,7 @@ impl CsiDriverProvider for BwsCsiProviderService {
             Ok(mounted_files) => {
                 let object_versions: Vec<_> = mounted_files
                     .iter()
-                    .map(|f| bws_csi_proto::v1alpha1::ObjectVersion {
+                    .map(|f| bitwarden_csi_proto::v1alpha1::ObjectVersion {
                         id: f.path.clone(),
                         version: String::new(),
                     })
@@ -61,7 +61,7 @@ impl CsiDriverProvider for BwsCsiProviderService {
                 error!(error = %e, code = %e.error_code(), "mount failed");
                 Ok(Response::new(MountResponse {
                     object_version: vec![],
-                    error: Some(bws_csi_proto::v1alpha1::Error {
+                    error: Some(bitwarden_csi_proto::v1alpha1::Error {
                         code: e.error_code().to_string(),
                     }),
                     files: vec![],

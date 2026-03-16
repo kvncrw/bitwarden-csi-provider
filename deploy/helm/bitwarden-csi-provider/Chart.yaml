@@ -1,5 +1,5 @@
 apiVersion: v2
-name: bws-csi-provider
+name: bitwarden-csi-provider
 description: Bitwarden Secrets Manager provider for the Secrets Store CSI Driver
 type: application
 version: 0.1.0

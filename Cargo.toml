@@ -1,8 +1,8 @@
 [workspace]
 members = [
-    "crates/bws-csi-proto",
-    "crates/bws-csi-core",
-    "crates/bws-csi-provider",
+    "crates/bitwarden-csi-proto",
+    "crates/bitwarden-csi-core",
+    "crates/bitwarden-csi-provider",
 ]
 resolver = "2"
 
@@ -10,7 +10,7 @@ resolver = "2"
 version = "0.1.0"
 edition = "2021"
 license = "GPL-3.0-only"
-repository = "https://github.com/kvncrw/bws-csi-provider"
+repository = "https://github.com/kvncrw/bitwarden-csi-provider"
 
 [workspace.dependencies]
 tokio = { version = "1", features = ["full"] }

@@ -1,4 +1,4 @@
-//! Integration tests for the bws-csi-provider gRPC server.
+//! Integration tests for the bitwarden-csi-provider gRPC server.
 //!
 //! These tests start the gRPC server on a temp Unix socket and exercise
 //! the Version and Mount RPCs. Mount tests require the bitwarden fake-server
@@ -6,8 +6,8 @@
 
 use std::sync::Once;
 
-use bws_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProviderServer;
-use bws_csi_proto::v1alpha1::{MountRequest, VersionRequest};
+use bitwarden_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProviderServer;
+use bitwarden_csi_proto::v1alpha1::{MountRequest, VersionRequest};
 use tempfile::TempDir;
 use tokio::net::UnixListener;
 use tokio_stream::wrappers::UnixListenerStream;
@@ -24,7 +24,7 @@ fn init_tracing() {
     INIT.call_once(|| {
         tracing_subscriber::fmt()
             .with_test_writer()
-            .with_env_filter("bws_csi=debug")
+            .with_env_filter("bitwarden_csi=debug")
             .try_init()
             .ok();
     });
@@ -33,7 +33,7 @@ fn init_tracing() {
 /// Helper: start the gRPC provider server on a temp Unix socket and return a client.
 async fn start_server_and_client(
     fake: &FakeServer,
-) -> bws_csi_proto::v1alpha1::csi_driver_provider_client::CsiDriverProviderClient<Channel> {
+) -> bitwarden_csi_proto::v1alpha1::csi_driver_provider_client::CsiDriverProviderClient<Channel> {
     let tmp = TempDir::new().unwrap();
     let socket_path = tmp.path().join("test.sock");
 
@@ -67,7 +67,7 @@ async fn start_server_and_client(
         .await
         .unwrap();
 
-    bws_csi_proto::v1alpha1::csi_driver_provider_client::CsiDriverProviderClient::new(channel)
+    bitwarden_csi_proto::v1alpha1::csi_driver_provider_client::CsiDriverProviderClient::new(channel)
 }
 
 /// A test-specific provider service that uses a custom BSM URL.
@@ -82,15 +82,15 @@ impl TestProviderService {
 }
 
 #[tonic::async_trait]
-impl bws_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProvider
+impl bitwarden_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProvider
     for TestProviderService
 {
     async fn version(
         &self,
         _request: tonic::Request<VersionRequest>,
-    ) -> Result<tonic::Response<bws_csi_proto::v1alpha1::VersionResponse>, tonic::Status> {
+    ) -> Result<tonic::Response<bitwarden_csi_proto::v1alpha1::VersionResponse>, tonic::Status> {
         Ok(tonic::Response::new(
-            bws_csi_proto::v1alpha1::VersionResponse {
+            bitwarden_csi_proto::v1alpha1::VersionResponse {
                 version: "v1alpha1".into(),
                 runtime_name: "bitwarden".into(),
                 runtime_version: env!("CARGO_PKG_VERSION").into(),
@@ -101,19 +101,19 @@ impl bws_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProvider
     async fn mount(
         &self,
         request: tonic::Request<MountRequest>,
-    ) -> Result<tonic::Response<bws_csi_proto::v1alpha1::MountResponse>, tonic::Status> {
+    ) -> Result<tonic::Response<bitwarden_csi_proto::v1alpha1::MountResponse>, tonic::Status> {
         let req = request.into_inner();
 
-        let client = bws_csi_core::bitwarden::SdkBitwardenClient::with_urls(
+        let client = bitwarden_csi_core::bitwarden::SdkBitwardenClient::with_urls(
             format!("{}/api", self.bsm_base_url),
             format!("{}/identity", self.bsm_base_url),
         );
 
-        match bws_csi_core::provider::handle_mount(&client, &req.attributes, &req.secrets).await {
+        match bitwarden_csi_core::provider::handle_mount(&client, &req.attributes, &req.secrets).await {
             Ok(files) => {
                 let object_versions: Vec<_> = files
                     .iter()
-                    .map(|f| bws_csi_proto::v1alpha1::ObjectVersion {
+                    .map(|f| bitwarden_csi_proto::v1alpha1::ObjectVersion {
                         id: f.path.clone(),
                         version: String::new(),
                     })
@@ -121,7 +121,7 @@ impl bws_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProvider
 
                 let grpc_files: Vec<_> = files
                     .into_iter()
-                    .map(|f| bws_csi_proto::v1alpha1::File {
+                    .map(|f| bitwarden_csi_proto::v1alpha1::File {
                         path: f.path,
                         mode: f.mode,
                         contents: f.contents,
@@ -129,7 +129,7 @@ impl bws_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProvider
                     .collect();
 
                 Ok(tonic::Response::new(
-                    bws_csi_proto::v1alpha1::MountResponse {
+                    bitwarden_csi_proto::v1alpha1::MountResponse {
                         object_version: object_versions,
                         error: None,
                         files: grpc_files,
@@ -137,9 +137,9 @@ impl bws_csi_proto::v1alpha1::csi_driver_provider_server::CsiDriverProvider
                 ))
             }
             Err(e) => Ok(tonic::Response::new(
-                bws_csi_proto::v1alpha1::MountResponse {
+                bitwarden_csi_proto::v1alpha1::MountResponse {
                     object_version: vec![],
-                    error: Some(bws_csi_proto::v1alpha1::Error {
+                    error: Some(bitwarden_csi_proto::v1alpha1::Error {
                         code: e.error_code().to_string(),
                     }),
                     files: vec![],

@@ -1,7 +1,7 @@
 use clap::Parser;
 
 #[derive(Parser, Debug)]
-#[command(name = "bws-csi-provider", version, about = "Bitwarden Secrets Manager CSI Provider")]
+#[command(name = "bitwarden-csi-provider", version, about = "Bitwarden Secrets Manager CSI Provider")]
 pub struct Config {
     /// Path to the provider socket directory.
     #[arg(

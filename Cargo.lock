@@ -354,6 +354,51 @@ dependencies = [
 ]
 
 [[package]]
+name = "bitwarden-csi-core"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "bitwarden",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
+name = "bitwarden-csi-proto"
+version = "0.1.0"
+dependencies = [
+ "prost",
+ "tonic",
+ "tonic-build",
+]
+
+[[package]]
+name = "bitwarden-csi-provider"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "bitwarden-csi-core",
+ "bitwarden-csi-proto",
+ "clap",
+ "hyper-util",
+ "prost",
+ "serde_json",
+ "tempfile",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+ "tower 0.4.13",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+]
+
+[[package]]
 name = "bitwarden-encoding"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -515,51 +560,6 @@ name = "bumpalo"
 version = "3.20.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d20789868f4b01b2f2caec9f5c4e0213b41e3e5702a50157d699ae31ced2fcb"
-
-[[package]]
-name = "bws-csi-core"
-version = "0.1.0"
-dependencies = [
- "async-trait",
- "bitwarden",
- "serde",
- "serde_json",
- "serde_yaml",
- "thiserror 2.0.18",
- "tokio",
- "tracing",
- "uuid",
-]
-
-[[package]]
-name = "bws-csi-proto"
-version = "0.1.0"
-dependencies = [
- "prost",
- "tonic",
- "tonic-build",
-]
-
-[[package]]
-name = "bws-csi-provider"
-version = "0.1.0"
-dependencies = [
- "async-trait",
- "bws-csi-core",
- "bws-csi-proto",
- "clap",
- "hyper-util",
- "prost",
- "serde_json",
- "tempfile",
- "tokio",
- "tokio-stream",
- "tonic",
- "tower 0.4.13",
- "tracing",
- "tracing-subscriber",
- "uuid",
-]
 
 [[package]]
 name = "bytes"
