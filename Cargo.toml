@@ -14,7 +14,7 @@ repository = "https://github.com/kvncrw/bitwarden-csi-provider"
 
 [workspace.dependencies]
 tokio = { version = "1", features = ["full"] }
-tonic = "0.12"
+tonic = "0.14"
 prost = "0.13"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
