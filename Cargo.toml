@@ -7,14 +7,14 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "GPL-3.0-only"
 repository = "https://github.com/kvncrw/bitwarden-csi-provider"
 
 [workspace.dependencies]
 tokio = { version = "1", features = ["full"] }
-tonic = "0.14"
+tonic = "0.12"
 prost = "0.13"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
