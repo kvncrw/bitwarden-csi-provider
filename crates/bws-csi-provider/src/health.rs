@@ -1,10 +1,11 @@
 use std::path::PathBuf;
-use tokio::io::AsyncWriteExt;
+use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::TcpListener;
 use tracing::{info, warn};
 
 /// Simple HTTP health probe server.
-/// Returns 200 if the provider socket file exists, 503 otherwise.
+/// Returns 200 on /healthz if the provider socket file exists, 503 otherwise.
+/// Returns 404 for any other path.
 pub async fn serve_health(addr: String, socket_path: PathBuf) {
     let listener = match TcpListener::bind(&addr).await {
         Ok(l) => {
@@ -22,10 +23,27 @@ pub async fn serve_health(addr: String, socket_path: PathBuf) {
             continue;
         };
 
-        let (status, body) = if socket_path.exists() {
-            ("200 OK", "ok")
-        } else {
-            ("503 Service Unavailable", "socket not found")
+        // Read the request line to extract the path
+        let mut reader = BufReader::new(&mut stream);
+        let mut request_line = String::new();
+        if reader.read_line(&mut request_line).await.is_err() {
+            continue;
+        }
+
+        let path = request_line
+            .split_whitespace()
+            .nth(1)
+            .unwrap_or("");
+
+        let (status, body) = match path {
+            "/healthz" | "/health" | "/livez" | "/readyz" => {
+                if socket_path.exists() {
+                    ("200 OK", "ok")
+                } else {
+                    ("503 Service Unavailable", "socket not found")
+                }
+            }
+            _ => ("404 Not Found", "not found"),
         };
 
         let response = format!(
